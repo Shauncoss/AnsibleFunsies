@@ -1,0 +1,49 @@
+---
+ - name: Create VM from template
+   vmware_guest:
+    hostname: "{{ vcenter }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: false
+    name: "{{ name }}"
+    datacenter: "{{ datacenter }}"
+    cluster: "{{ cluster }}"
+    folder: "{{ folder }}"
+    state: poweredon
+    template: "{{ template }}"
+    disk:
+    - size_gb: 16
+      type: thin
+      autoselect_datastore: true
+    networks:
+    - name: "{{ portgroup }}"
+      ip: "{{ server_ip }}"
+      netmask: "{{ netmask }}"
+      gateway: "{{ gateway }}"
+      type: static
+    customization:
+     dns_servers:
+     - 192.168.2.102
+
+ - name: "Wait for VM Tools"
+   local_action:
+    module: vmware_guest_tools_wait
+    hostname: "{{ vcenter }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: false
+    name: "{{ name }}"
+
+ - name: "Wait for SSH"
+   local_action:
+    module: wait_for
+    host: "{{ server_ip }}"
+    port: 22
+    timeout: 300
+    state: started
+    delay: 30
+
+ - name: "Add Provioned VM to temp Host Group"
+   add_host:
+    name: "{{ server_ip }}"
+    groups: webservers

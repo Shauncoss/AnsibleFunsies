@@ -1,0 +1,16 @@
+---
+# defaults file for /etc/ansible/roles/DeployVM
+vcenter: vc.lab.local
+username: administrator@vsphere.local
+password: WWTwwt1!
+datacenter: Lab
+cluster: Compute
+template: CentOSTemplate
+portgroup: "VM Network"
+folder: /
+osusr: root
+ospwd: WWTwwt1!
+server_ip: 192.168.2.149
+netmask: 255.255.255.0
+gateway: 192.168.2.2
+dns_ip: 192.168.2.102
